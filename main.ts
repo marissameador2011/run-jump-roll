@@ -9,9 +9,20 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
 info.onScore(10, function () {
     game.gameOver(true)
 })
+scene.onOverlapTile(SpriteKind.Player, sprites.builtin.coral4, function (sprite, location) {
+    info.startCountdown(10)
+    info.changeLifeBy(-1)
+})
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Projectile, function (sprite, otherSprite) {
     info.changeScoreBy(1)
     Coin.startEffect(effects.confetti, 1000)
+})
+info.onLifeZero(function () {
+    game.setGameOverMessage(false, "GAME OVER!")
+    game.gameOver(false)
+})
+sprites.onOverlap(SpriteKind.Player, SpriteKind.Goal, function (sprite, otherSprite) {
+    game.splash("This ain't over yet ")
 })
 let Coin: Sprite = null
 let Steve: Sprite = null
@@ -153,7 +164,6 @@ scene.setBackgroundImage(img`
     `)
 controller.moveSprite(Steve, 100, 0)
 Steve.ay = 300
-tiles.setCurrentTilemap(tilemap`level1`)
 tiles.setCurrentTilemap(tilemap`level2`)
 Coin = sprites.create(img`
     . . . . . . . . . . . . . . . . 
@@ -176,6 +186,26 @@ Coin = sprites.create(img`
 scene.cameraFollowSprite(Steve)
 info.setScore(0)
 Coin.setPosition(500, 40)
+let Flag = sprites.create(img`
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . f f a 3 a 3 a . . . . 
+    . . . . . f f 3 a 3 a 3 . . . . 
+    . . . . . f f a 3 a 3 a . . . . 
+    . . . . . f f 3 a 3 a 3 . . . . 
+    . . . . . f f . . . . . . . . . 
+    . . . . . f f . . . . . . . . . 
+    . . . . . f f . . . . . . . . . 
+    . . . . . f f . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    `, SpriteKind.Goal)
+info.setLife(5)
+Flag.setPosition(700, 50)
 game.onUpdate(function () {
     game.setGameOverEffect(true, effects.confetti)
 })
