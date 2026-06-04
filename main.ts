@@ -14,6 +14,7 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Projectile, function (sprite, ot
     Coin.startEffect(effects.confetti, 1000)
 })
 let Coin: Sprite = null
+let goalFlag: Sprite = null
 let Steve: Sprite = null
 Steve = sprites.create(img`
     . . . . . f f f f f f . . . . . 
@@ -153,8 +154,18 @@ scene.setBackgroundImage(img`
     `)
 controller.moveSprite(Steve, 100, 0)
 Steve.ay = 300
-tiles.setCurrentTilemap(tilemap`level1`)
 tiles.setCurrentTilemap(tilemap`level2`)
+goalFlag = sprites.create(img`
+    . . . . . 2 2 . . . . 
+    . . . . 2 4 4 2 . . . 
+    . . . 2 4 5 4 2 . . . 
+    . . . 2 4 4 2 . . . . 
+    . . . 2 4 4 2 . . . . 
+    . . . 2 4 4 2 . . . . 
+    . . . . 2 4 2 . . . . 
+    . . . . . 2 . . . . . 
+    `, SpriteKind.Goal)
+tiles.placeOnTile(goalFlag, tiles.getTileLocation(46, 5))
 Coin = sprites.create(img`
     . . . . . . . . . . . . . . . . 
     . . . . . . . . . . . . . . . . 
@@ -176,6 +187,15 @@ Coin = sprites.create(img`
 scene.cameraFollowSprite(Steve)
 info.setScore(0)
 Coin.setPosition(500, 40)
+
+sprites.onOverlap(SpriteKind.Player, SpriteKind.Goal, function (sprite, otherSprite) {
+    otherSprite.destroy()
+    tiles.setCurrentTilemap(tilemap`level1`)
+    tiles.placeOnTile(Steve, tiles.getTileLocation(1, 12))
+    scene.cameraFollowSprite(Steve)
+    Coin.setPosition(120, 40)
+})
+
 game.onUpdate(function () {
     game.setGameOverEffect(true, effects.confetti)
 })
