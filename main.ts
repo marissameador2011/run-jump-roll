@@ -9,9 +9,17 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
 info.onScore(10, function () {
     game.gameOver(true)
 })
+scene.onOverlapTile(SpriteKind.Player, sprites.builtin.coral4, function (sprite, location) {
+    info.startCountdown(10)
+    info.changeLifeBy(-1)
+})
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Projectile, function (sprite, otherSprite) {
     info.changeScoreBy(1)
     Coin.startEffect(effects.confetti, 1000)
+})
+info.onLifeZero(function () {
+    game.setGameOverMessage(false, "GAME OVER!")
+    game.gameOver(false)
 })
 let Coin: Sprite = null
 let goalFlag: Sprite = null
@@ -187,9 +195,23 @@ Coin = sprites.create(img`
 scene.cameraFollowSprite(Steve)
 info.setScore(0)
 Coin.setPosition(500, 40)
+info.setLife(5)
+goalFlag = sprites.create(img`
+    . . . . . 2 2 . . . . 
+    . . . . 2 4 4 2 . . . 
+    . . . 2 4 5 4 2 . . . 
+    . . . 2 4 4 2 . . . . 
+    . . . 2 4 4 2 . . . . 
+    . . . 2 4 4 2 . . . . 
+    . . . . 2 4 2 . . . . 
+    . . . . . 2 . . . . . 
+    `, SpriteKind.Goal)
+tiles.placeOnTile(goalFlag, tiles.getTileLocation(46, 5))
 
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Goal, function (sprite, otherSprite) {
     otherSprite.destroy()
+    game.splash("This ain't over yet")
+    info.setLife(5)
     tiles.setCurrentTilemap(tilemap`level1`)
     tiles.placeOnTile(Steve, tiles.getTileLocation(1, 12))
     scene.cameraFollowSprite(Steve)
