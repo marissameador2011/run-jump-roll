@@ -196,17 +196,6 @@ scene.cameraFollowSprite(Steve)
 info.setScore(0)
 Coin.setPosition(500, 40)
 info.setLife(5)
-goalFlag = sprites.create(img`
-    . . . . . 2 2 . . . . 
-    . . . . 2 4 4 2 . . . 
-    . . . 2 4 5 4 2 . . . 
-    . . . 2 4 4 2 . . . . 
-    . . . 2 4 4 2 . . . . 
-    . . . 2 4 4 2 . . . . 
-    . . . . 2 4 2 . . . . 
-    . . . . . 2 . . . . . 
-    `, SpriteKind.Goal)
-tiles.placeOnTile(goalFlag, tiles.getTileLocation(46, 5))
 
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Goal, function (sprite, otherSprite) {
     otherSprite.destroy()
